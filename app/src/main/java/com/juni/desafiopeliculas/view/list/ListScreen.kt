@@ -21,18 +21,13 @@ import androidx.compose.ui.unit.dp
 import com.juni.desafiopeliculas.view.model.Movie
 
 @Composable
-fun ListScreen(ola: (Movie) -> Unit) {
-    //val data by viewModel.placeList.observeAsState(emptyList())
-    val list =
-        listOf(
-            Movie("batman", "url poster", "4", "12/12/2009", "una pelicula de batman"),
-            Movie("superman", "url poster", "4", "12/12/2009", "una pelicula de batman"),
-            Movie("robocop", "url poster", "4", "12/12/2009", "una pelicula de batman")
-        )
+fun ListScreen(listMovieViewModel: ListMovieViewModel, selectMovie: (Movie) -> Unit) {
+
+    val movieList = listMovieViewModel.movieList
 
     LazyColumn(Modifier.fillMaxSize()) {
-        items(list) {
-            ListItem(movie = it, ola)
+        items(movieList) {
+            ListItem(movie = it, selectMovie)
         }
     }
 
@@ -40,10 +35,10 @@ fun ListScreen(ola: (Movie) -> Unit) {
 
 
 @Composable
-fun ListItem(movie: Movie, selectItem: (Movie) -> Unit, modifier: Modifier = Modifier) {
+fun ListItem(movie: Movie, selectMovie: (Movie) -> Unit, modifier: Modifier = Modifier) {
     Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier
         .clickable {
-            selectItem(movie)
+            selectMovie(movie)
         }
         .padding(16.dp)) {
         Icon(

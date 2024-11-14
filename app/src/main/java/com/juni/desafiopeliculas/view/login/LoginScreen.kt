@@ -1,5 +1,6 @@
 package com.juni.desafiopeliculas.view.login
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +14,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
@@ -20,40 +23,68 @@ import androidx.compose.ui.unit.dp
 
 
 @Composable
-fun LoginScreen(buttonClick: () -> Unit) {
+fun LoginScreen(showList: () -> Unit, loginViewModel: LoginViewModel) {
+    val email by loginViewModel.user.observeAsState(initial = "")
+    val password by loginViewModel.password.observeAsState(initial = "")
+    val isLoginEnable by loginViewModel.isButtonEnabled.observeAsState(initial = false)
+    val isLoading by loginViewModel.isUserValidate.observeAsState(initial = false)
+
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
         Column(modifier = Modifier.align(Alignment.Center)) {
-            TextField(
-                value = "",
-                onValueChange = {},
-                placeholder = { Text("Ingresar Usuario") },
-                modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
-            )
-            Spacer(modifier = Modifier.size(8.dp))
-
-            TextField(
-                value = "",
-                onValueChange = {},
-                placeholder = { Text("password") },
-                modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
-            )
-            Spacer(modifier = Modifier.size(8.dp))
-
-            Button(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(4.dp),
-                onClick = { buttonClick() }) {
-                Text(text = "iniciar")
+            EmailField(email = email) {
+                loginViewModel.onLoginChange(it, password)
             }
-
+            Spacer(modifier = Modifier.size(8.dp))
+            PasswordField(password = password) {
+                loginViewModel.onLoginChange(email, it)
+            }
+            Spacer(modifier = Modifier.size(8.dp))
+            LoginButton(isLoginEnable) {
+                loginViewModel.onLoginSelected()
+            }
         }
     }
 
+    if (isLoading){
+        showList()
+    }
 
+}
+
+@Composable
+fun EmailField(email: String, dataUserChange: (String) -> Unit) {
+
+    TextField(
+        value = email,
+        onValueChange = { dataUserChange(it) },
+        placeholder = { Text("Ingresar Usuario") },
+        modifier = Modifier.fillMaxWidth(),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+    )
+}
+
+@Composable
+fun PasswordField(password: String, dataUserChange: (String) -> Unit) {
+    TextField(
+        value = password,
+        onValueChange = { dataUserChange(it) },
+        placeholder = { Text("password") },
+        modifier = Modifier.fillMaxWidth(),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+    )
+}
+
+@Composable
+fun LoginButton(isEnable: Boolean, onLoginSelected: () -> Unit) {
+    Button(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(4.dp),
+        enabled = isEnable,
+        onClick = { onLoginSelected() }) {
+        Text(text = "iniciar")
+    }
 }
