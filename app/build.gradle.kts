@@ -60,6 +60,10 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.runtime.livedata)
 
+    implementation(libs.retrofit2.retrofit)
+    implementation(libs.converter.scalars)
+    implementation(libs.converter.gson)
+
     implementation(libs.androidx.appcompat)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
