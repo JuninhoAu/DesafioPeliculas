@@ -1,19 +1,20 @@
 package com.juni.desafiopeliculas.view.list
 
-import androidx.compose.runtime.mutableStateListOf
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.juni.desafiopeliculas.common.ResultType
 import com.juni.desafiopeliculas.domain.GetMovieListUseCase
-import com.juni.desafiopeliculas.view.model.Movie
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ListMovieViewModel(getMovieListUseCase: GetMovieListUseCase) : ViewModel() {
-
-    private val _movieList = mutableStateListOf<Movie>()
-    val movieList: List<Movie> = _movieList
+@HiltViewModel
+class ListMovieViewModel @Inject constructor(getMovieListUseCase: GetMovieListUseCase) :
+    ViewModel() {
 
     private val _uiStateList = MutableStateFlow<ListUiState>(ListUiState.Loading)
     val uiStateList: StateFlow<ListUiState> = _uiStateList
@@ -21,18 +22,30 @@ class ListMovieViewModel(getMovieListUseCase: GetMovieListUseCase) : ViewModel()
     init {
         viewModelScope.launch {
             _uiStateList.value = ListUiState.Loading
-
-            when (val movieNetWorkList = getMovieListUseCase.invoke()) {
+            val result = getMovieListUseCase.getListFromApi()
+            when (result) {
                 is ResultType.Success -> {
-                    val list = movieNetWorkList.data
-                    for (movie in list) {
-                        _movieList.add(movie)
+                    getMovieListUseCase.getListFromBD().catch {
+                        _uiStateList.value = ListUiState.Error(Throwable("hubo un error"))
+                    }.collect { movies ->
+                        if (movies.isEmpty()) {
+                            _uiStateList.value = ListUiState.Error(Throwable("lista vacia"))
+                        } else {
+                            _uiStateList.value = ListUiState.Success(movies)
+                        }
                     }
-                    _uiStateList.value = ListUiState.Success(_movieList)
                 }
 
                 is ResultType.Failure -> {
-                    _uiStateList.value = ListUiState.Error(Throwable(movieNetWorkList.error))
+                    getMovieListUseCase.getListFromBD().catch {
+                        _uiStateList.value = ListUiState.Error(Throwable("hubo un error"))
+                    }.collect { movies ->
+                        if (movies.isEmpty()) {
+                            _uiStateList.value = ListUiState.Error(Throwable("lista vacia"))
+                        } else {
+                            _uiStateList.value = ListUiState.Success(movies)
+                        }
+                    }
                 }
 
             }

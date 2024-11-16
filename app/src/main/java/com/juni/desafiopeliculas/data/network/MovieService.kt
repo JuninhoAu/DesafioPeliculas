@@ -4,8 +4,9 @@ import com.juni.desafiopeliculas.common.ResultType
 import com.juni.desafiopeliculas.data.model.MovieResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class MovieService {
+class MovieService @Inject constructor(){
 
     suspend fun getMovies(): ResultType<List<MovieResponse>, String> {
         return withContext(Dispatchers.IO) {

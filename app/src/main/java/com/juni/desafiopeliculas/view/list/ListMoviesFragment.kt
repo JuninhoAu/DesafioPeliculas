@@ -8,21 +8,15 @@ import android.view.ViewGroup
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
+import androidx.fragment.app.viewModels
 import androidx.navigation.findNavController
-import com.juni.desafiopeliculas.data.network.MovieService
-import com.juni.desafiopeliculas.data.repository.GetMovieListRepository
-import com.juni.desafiopeliculas.domain.GetMovieListUseCase
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class ListMoviesFragment : Fragment() {
 
-    private val viewModel: ListMovieViewModel by lazy {
-        ListMovieViewModel(
-            GetMovieListUseCase(
-                GetMovieListRepository(MovieService())
-            )
-        )
-    }
+   private val viewModel:ListMovieViewModel by viewModels()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

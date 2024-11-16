@@ -1,27 +1,57 @@
 package com.juni.desafiopeliculas.data.repository
 
 import com.juni.desafiopeliculas.common.ResultType
+import com.juni.desafiopeliculas.data.local.MovieDao
+import com.juni.desafiopeliculas.data.local.MovieEntity
 import com.juni.desafiopeliculas.data.model.MovieResponse
 import com.juni.desafiopeliculas.data.network.MovieService
 import com.juni.desafiopeliculas.view.model.Movie
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class GetMovieListRepository(private val movieService: MovieService) {
+@Singleton
+class GetMovieListRepository @Inject constructor (
+    private val movieService: MovieService,
+    private val movieDao: MovieDao
+) {
 
-    suspend fun getMovieList(): ResultType<List<Movie>, String> {
-        val movieList =  movieService.getMovies()
+    suspend fun getMovieList(): ResultType<Boolean, String> {
+        val movieList = movieService.getMovies()
         return when (movieList) {
             is ResultType.Success -> {
-                val movieListMap = movieList.data.map { movie ->
-                    movie.toDomain()
+                if (movieList.data.isNotEmpty()) {
+                    val movieListMap = movieList.data.map { movie ->
+                        movie.toData()
+                    }
+                    movieDao.insertMovies(movieListMap)
+                    ResultType.Success(true)
+                } else {
+                    ResultType.Failure("lista vacia")
                 }
-                ResultType.Success(movieListMap)
+
             }
+
             is ResultType.Failure -> {
                 ResultType.Failure(movieList.error)
             }
         }
     }
+
+    fun getLocalMovies(): Flow<List<Movie>> = movieDao.getMovies().map {
+        movieEntityList -> movieEntityList.map {
+            movieEntity -> movieEntity.toDomain()
+        }
+    }
+
 }
+
+fun MovieEntity.toDomain() =
+    Movie(id, title, posterPath, voteAverage.toString(), releaseDate, overview)
 
 fun MovieResponse.toDomain() =
     Movie(id, title, posterPath, voteAverage.toString(), releaseDate, overview)
+
+fun MovieResponse.toData() =
+    MovieEntity(id, overview, posterPath, releaseDate, title, voteAverage.toDouble())
