@@ -1,10 +1,12 @@
 package com.juni.desafiopeliculas.data.repository
 
+import androidx.paging.PagingSource
 import com.juni.desafiopeliculas.common.ResultType
 import com.juni.desafiopeliculas.data.local.MovieDao
 import com.juni.desafiopeliculas.data.local.MovieEntity
-import com.juni.desafiopeliculas.data.model.MovieResponse
 import com.juni.desafiopeliculas.data.network.MovieService
+import com.juni.desafiopeliculas.domain.mapper.toData
+import com.juni.desafiopeliculas.domain.mapper.toDomain
 import com.juni.desafiopeliculas.domain.model.MovieModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -45,13 +47,6 @@ class GetMovieListRepository @Inject constructor (
         }
     }
 
+    fun getLocalMoviesPaging(): PagingSource<Int, MovieEntity> = movieDao.getMoviesPaged()
+
 }
-
-fun MovieEntity.toDomain() =
-    MovieModel(id, title, posterPath, voteAverage.toString(), releaseDate, overview)
-
-fun MovieResponse.toDomain() =
-    MovieModel(id, title, posterPath, voteAverage.toString(), releaseDate, overview)
-
-fun MovieResponse.toData() =
-    MovieEntity(id, overview, posterPath, releaseDate, title, voteAverage.toDouble())

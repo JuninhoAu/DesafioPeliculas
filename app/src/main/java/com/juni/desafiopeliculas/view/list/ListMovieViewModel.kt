@@ -3,9 +3,13 @@ package com.juni.desafiopeliculas.view.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.juni.desafiopeliculas.common.ResultType
+import com.juni.desafiopeliculas.domain.model.MovieModel
 import com.juni.desafiopeliculas.domain.useCase.GetMovieListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -18,6 +22,10 @@ class ListMovieViewModel @Inject constructor(getMovieListUseCase: GetMovieListUs
 
     private val _uiStateList = MutableStateFlow<ListUiState>(ListUiState.Loading)
     val uiStateList: StateFlow<ListUiState> = _uiStateList
+
+    val moviePagingData: Flow<PagingData<MovieModel>> =
+        getMovieListUseCase.getListMoviePaging().cachedIn(viewModelScope)
+
 
     init {
         viewModelScope.launch {
