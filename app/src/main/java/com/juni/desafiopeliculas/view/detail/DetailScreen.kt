@@ -11,23 +11,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.juni.desafiopeliculas.view.model.Movie
+import com.juni.desafiopeliculas.domain.model.MovieModel
 
 @Composable
-fun DetailScreen(movie: Movie) {
+fun DetailScreen(movieModel: MovieModel) {
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
         Column(modifier = Modifier.align(Alignment.Center)) {
-            Text(text = movie.title)
+            Text(text = movieModel.title)
             Spacer(modifier = Modifier.size(8.dp))
-            Text(text = movie.voteAverage)
+            Text(text = movieModel.voteAverage)
             Spacer(modifier = Modifier.size(8.dp))
-            Text(text = movie.releaseDate)
+            Text(text = movieModel.releaseDate)
             Spacer(modifier = Modifier.size(8.dp))
-            Text(text = movie.overview)
+            Text(text = movieModel.overview)
 
         }
     }

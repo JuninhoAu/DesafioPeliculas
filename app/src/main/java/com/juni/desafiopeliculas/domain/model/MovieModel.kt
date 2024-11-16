@@ -1,8 +1,8 @@
-package com.juni.desafiopeliculas.view.model
+package com.juni.desafiopeliculas.domain.model
 
 import java.io.Serializable
 
-data class Movie(
+data class MovieModel(
     val id: Int,
     val title: String,
     val posterPath: String,

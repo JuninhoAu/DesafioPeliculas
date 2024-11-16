@@ -5,7 +5,7 @@ import com.juni.desafiopeliculas.data.local.MovieDao
 import com.juni.desafiopeliculas.data.local.MovieEntity
 import com.juni.desafiopeliculas.data.model.MovieResponse
 import com.juni.desafiopeliculas.data.network.MovieService
-import com.juni.desafiopeliculas.view.model.Movie
+import com.juni.desafiopeliculas.domain.model.MovieModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -39,7 +39,7 @@ class GetMovieListRepository @Inject constructor (
         }
     }
 
-    fun getLocalMovies(): Flow<List<Movie>> = movieDao.getMovies().map {
+    fun getLocalMovies(): Flow<List<MovieModel>> = movieDao.getMovies().map {
         movieEntityList -> movieEntityList.map {
             movieEntity -> movieEntity.toDomain()
         }
@@ -48,10 +48,10 @@ class GetMovieListRepository @Inject constructor (
 }
 
 fun MovieEntity.toDomain() =
-    Movie(id, title, posterPath, voteAverage.toString(), releaseDate, overview)
+    MovieModel(id, title, posterPath, voteAverage.toString(), releaseDate, overview)
 
 fun MovieResponse.toDomain() =
-    Movie(id, title, posterPath, voteAverage.toString(), releaseDate, overview)
+    MovieModel(id, title, posterPath, voteAverage.toString(), releaseDate, overview)
 
 fun MovieResponse.toData() =
     MovieEntity(id, overview, posterPath, releaseDate, title, voteAverage.toDouble())

@@ -4,7 +4,7 @@ package com.juni.desafiopeliculas.view.list
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.juni.desafiopeliculas.common.ResultType
-import com.juni.desafiopeliculas.domain.GetMovieListUseCase
+import com.juni.desafiopeliculas.domain.useCase.GetMovieListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

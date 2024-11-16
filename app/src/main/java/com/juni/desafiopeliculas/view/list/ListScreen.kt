@@ -24,10 +24,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.juni.desafiopeliculas.view.model.Movie
+import com.juni.desafiopeliculas.domain.model.MovieModel
 
 @Composable
-fun ListScreen(viewModel: ListMovieViewModel, selectMovie: (Movie) -> Unit) {
+fun ListScreen(viewModel: ListMovieViewModel, selectMovie: (MovieModel) -> Unit) {
 
     val uiState by viewModel.uiStateList.collectAsState()
 
@@ -39,7 +39,7 @@ fun ListScreen(viewModel: ListMovieViewModel, selectMovie: (Movie) -> Unit) {
         }
 
         is ListUiState.Success -> {
-            val listMovie = (uiState as ListUiState.Success).movieList
+            val listMovie = (uiState as ListUiState.Success).movieModelList
             ListMovies(listMovie) {
                 selectMovie(it)
             }
@@ -62,20 +62,20 @@ fun ListScreen(viewModel: ListMovieViewModel, selectMovie: (Movie) -> Unit) {
 }
 
 @Composable
-fun ListMovies(movieList: List<Movie>, selectMovie: (Movie) -> Unit) {
+fun ListMovies(movieModelList: List<MovieModel>, selectMovie: (MovieModel) -> Unit) {
     LazyColumn(Modifier.fillMaxSize()) {
-        items(movieList) {
-            ListItem(movie = it, selectMovie)
+        items(movieModelList) {
+            ListItem(movieModel = it, selectMovie)
         }
     }
 }
 
 
 @Composable
-fun ListItem(movie: Movie, selectMovie: (Movie) -> Unit, modifier: Modifier = Modifier) {
+fun ListItem(movieModel: MovieModel, selectMovie: (MovieModel) -> Unit, modifier: Modifier = Modifier) {
     Row(verticalAlignment = Alignment.CenterVertically, modifier = modifier
         .clickable {
-            selectMovie(movie)
+            selectMovie(movieModel)
         }
         .padding(16.dp)) {
         Icon(
@@ -85,14 +85,14 @@ fun ListItem(movie: Movie, selectMovie: (Movie) -> Unit, modifier: Modifier = Mo
         )
         Column(modifier.fillMaxWidth()) {
             Text(
-                text = movie.title,
+                text = movieModel.title,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
                     .height(30.dp)
                     .fillMaxWidth()
             )
             Text(
-                text = movie.overview,
+                text = movieModel.overview,
                 fontWeight = FontWeight.Light,
                 modifier = Modifier
                     .height(25.dp)
