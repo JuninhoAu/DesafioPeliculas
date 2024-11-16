@@ -8,7 +8,7 @@
         android:id="@+id/loginFragment"
         android:name="com.juni.desafiopeliculas.view.login.LoginFragment"
         android:label="fragment_login">
-    <action
+        <action
             android:id="@+id/action_loginFragment_to_listMoviesFragment"
             app:destination="@id/listMoviesFragment" />
     </fragment>
@@ -16,9 +16,13 @@
         android:id="@+id/listMoviesFragment"
         android:name="com.juni.desafiopeliculas.view.list.ListMoviesFragment"
         android:label="fragment_list_movies">
-    <action
+        <action
             android:id="@+id/action_listMoviesFragment_to_listDetailFragment"
-            app:destination="@id/listDetailFragment" />
+            app:destination="@id/listDetailFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
     </fragment>
     <fragment
         android:id="@+id/listDetailFragment"
