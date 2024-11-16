@@ -9,7 +9,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
 import com.juni.desafiopeliculas.R
 
 
@@ -27,13 +27,17 @@ class LoginFragment : Fragment() {
             setContent {
                 MaterialTheme {
                     LoginScreen(
-                        showList = { findNavController().navigate(R.id.action_loginFragment_to_listMoviesFragment) },
                         loginViewModel = viewModel
-                    )
+                    ) {
+                        movieListScreen()
+                    }
                 }
             }
 
         }
     }
 
+    private fun movieListScreen() {
+        findNavController().navigate(R.id.action_loginFragment_to_listMoviesFragment)
+    }
 }

@@ -9,13 +9,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.ViewCompositionStrategy
 import androidx.fragment.app.viewModels
-import androidx.navigation.findNavController
+import androidx.navigation.fragment.findNavController
+import com.juni.desafiopeliculas.domain.model.MovieModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ListMoviesFragment : Fragment() {
 
-   private val viewModel:ListMovieViewModel by viewModels()
+    private val viewModel: ListMovieViewModel by viewModels()
 
 
     override fun onCreateView(
@@ -28,15 +29,17 @@ class ListMoviesFragment : Fragment() {
             setContent {
                 MaterialTheme {
                     ListScreen(viewModel = viewModel) {
-                        val action =
-                            ListMoviesFragmentDirections.actionListMoviesFragmentToListDetailFragment(
-                                movie = it
-                            )
-                        findNavController().navigate(action)
+                        itemDetailScreen(it)
                     }
                 }
             }
 
         }
+    }
+
+    private fun itemDetailScreen(movieModel: MovieModel) {
+        val fragmentDir = ListMoviesFragmentDirections
+        val action = fragmentDir.actionListMoviesFragmentToListDetailFragment(movie = movieModel)
+        findNavController().navigate(action)
     }
 }

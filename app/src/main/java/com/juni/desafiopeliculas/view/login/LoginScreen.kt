@@ -1,6 +1,5 @@
 package com.juni.desafiopeliculas.view.login
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -23,11 +22,11 @@ import androidx.compose.ui.unit.dp
 
 
 @Composable
-fun LoginScreen(showList: () -> Unit, loginViewModel: LoginViewModel) {
+fun LoginScreen(loginViewModel: LoginViewModel, nextScreen: () -> Unit) {
     val email by loginViewModel.user.observeAsState(initial = "")
     val password by loginViewModel.password.observeAsState(initial = "")
     val isLoginEnable by loginViewModel.isButtonEnabled.observeAsState(initial = false)
-    val isLoading by loginViewModel.isUserValidate.observeAsState(initial = false)
+    val isUserValidate by loginViewModel.isUserValidate.observeAsState(initial = false)
 
     Box(
         modifier = Modifier
@@ -49,8 +48,8 @@ fun LoginScreen(showList: () -> Unit, loginViewModel: LoginViewModel) {
         }
     }
 
-    if (isLoading){
-        showList()
+    if (isUserValidate){
+        nextScreen()
     }
 
 }
