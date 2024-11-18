@@ -1,52 +1,37 @@
 package com.juni.desafiopeliculas.data.repository
 
 import androidx.paging.PagingSource
+import com.juni.desafiopeliculas.common.DatabaseCheckResult
 import com.juni.desafiopeliculas.common.ResultType
 import com.juni.desafiopeliculas.data.local.MovieDao
 import com.juni.desafiopeliculas.data.local.MovieEntity
 import com.juni.desafiopeliculas.data.network.MovieService
 import com.juni.desafiopeliculas.domain.mapper.toData
-import com.juni.desafiopeliculas.domain.mapper.toDomain
-import com.juni.desafiopeliculas.domain.model.MovieModel
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.firstOrNull
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class GetMovieListRepository @Inject constructor (
+class GetMovieListRepository @Inject constructor(
     private val movieService: MovieService,
     private val movieDao: MovieDao
 ) {
 
-    suspend fun getMovieList(): ResultType<Boolean, String> {
+    suspend fun checkMovieList(): DatabaseCheckResult {
+
         val movieList = movieService.getMovies()
-        return when (movieList) {
-            is ResultType.Success -> {
-                if (movieList.data.isNotEmpty()) {
-                    val movieListMap = movieList.data.map { movie ->
-                        movie.toData()
-                    }
-                    movieDao.insertMovies(movieListMap)
-                    ResultType.Success(true)
-                } else {
-                    ResultType.Failure("lista vacia")
-                }
-
-            }
-
-            is ResultType.Failure -> {
-                ResultType.Failure(movieList.error)
-            }
+        if (movieList is ResultType.Success && movieList.data.isNotEmpty()) {
+            movieDao.insertMovies(movieList.data.map { it.toData() })
         }
+        return if (hasMovies()) DatabaseCheckResult.Exists else DatabaseCheckResult.NoData
+
     }
 
-    fun getLocalMovies(): Flow<List<MovieModel>> = movieDao.getMovies().map {
-        movieEntityList -> movieEntityList.map {
-            movieEntity -> movieEntity.toDomain()
-        }
+    private suspend fun hasMovies(): Boolean {
+        return movieDao.getMovies().firstOrNull()?.isNotEmpty() == true
     }
 
-    fun getLocalMoviesPaging(): PagingSource<Int, MovieEntity> = movieDao.getMoviesPaged()
+
+    fun getMovieListPaging(): PagingSource<Int, MovieEntity> = movieDao.getMoviesPaged()
 
 }

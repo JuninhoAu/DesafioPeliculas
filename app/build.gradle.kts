@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.juni.desafiopeliculas"
-        minSdk = 24
+        minSdk = 26
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -80,6 +80,9 @@ dependencies {
     implementation("androidx.paging:paging-compose:3.3.2")
     implementation("androidx.room:room-paging:2.6.0")
 
+    implementation("junit:junit:4.13.2")
+    implementation("io.mockk:mockk:1.12.2")
+    testImplementation ("androidx.paging:paging-common:3.2.0") // Para pruebas de Paging
 
 
     implementation(libs.androidx.appcompat)

@@ -5,57 +5,39 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.juni.desafiopeliculas.common.ResultType
+import com.juni.desafiopeliculas.common.DatabaseCheckResult
 import com.juni.desafiopeliculas.domain.model.MovieModel
 import com.juni.desafiopeliculas.domain.useCase.GetMovieListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ListMovieViewModel @Inject constructor(getMovieListUseCase: GetMovieListUseCase) :
-    ViewModel() {
+class ListMovieViewModel @Inject constructor(useCase: GetMovieListUseCase) : ViewModel() {
 
-    private val _uiStateList = MutableStateFlow<ListUiState>(ListUiState.Loading)
-    val uiStateList: StateFlow<ListUiState> = _uiStateList
+    private val _checkMovieList = MutableStateFlow<DatabaseCheckResult>(DatabaseCheckResult.Loading)
+    val checkMovieList: StateFlow<DatabaseCheckResult> = _checkMovieList
 
     val moviePagingData: Flow<PagingData<MovieModel>> =
-        getMovieListUseCase.getListMoviePaging().cachedIn(viewModelScope)
+        useCase.getListMoviePaging().cachedIn(viewModelScope)
 
 
     init {
         viewModelScope.launch {
-            _uiStateList.value = ListUiState.Loading
-            val result = getMovieListUseCase.getListFromApi()
-            when (result) {
-                is ResultType.Success -> {
-                    getMovieListUseCase.getListFromBD().catch {
-                        _uiStateList.value = ListUiState.Error(Throwable("hubo un error"))
-                    }.collect { movies ->
-                        if (movies.isEmpty()) {
-                            _uiStateList.value = ListUiState.Error(Throwable("lista vacia"))
-                        } else {
-                            _uiStateList.value = ListUiState.Success(movies)
-                        }
-                    }
-                }
+            val checkMovieList = useCase.checkMovieList()
 
-                is ResultType.Failure -> {
-                    getMovieListUseCase.getListFromBD().catch {
-                        _uiStateList.value = ListUiState.Error(Throwable("hubo un error"))
-                    }.collect { movies ->
-                        if (movies.isEmpty()) {
-                            _uiStateList.value = ListUiState.Error(Throwable("lista vacia"))
-                        } else {
-                            _uiStateList.value = ListUiState.Success(movies)
-                        }
-                    }
-                }
+            when (checkMovieList) {
 
+                DatabaseCheckResult.Exists -> _checkMovieList.value = DatabaseCheckResult.Exists
+
+                DatabaseCheckResult.Error -> _checkMovieList.value = DatabaseCheckResult.Error
+
+                DatabaseCheckResult.NoData -> _checkMovieList.value = DatabaseCheckResult.NoData
+
+                DatabaseCheckResult.Loading -> _checkMovieList.value = DatabaseCheckResult.Loading
             }
 
         }
