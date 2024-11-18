@@ -66,6 +66,9 @@ dependencies {
     implementation(libs.converter.scalars)
     implementation(libs.converter.gson)
 
+    //
+    implementation("androidx.compose.material:material-icons-extended-android:1.7.5")
+
     //room
     implementation("androidx.room:room-runtime:2.6.1")
     kapt("androidx.room:room-compiler:2.6.1")
