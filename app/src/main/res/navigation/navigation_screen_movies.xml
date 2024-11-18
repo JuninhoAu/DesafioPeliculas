@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navigation_screen_movies"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.juni.desafiopeliculas.view.login.LoginFragment"
+        android:label="fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_listMoviesFragment"
+            app:destination="@id/listMoviesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/listMoviesFragment"
+        android:name="com.juni.desafiopeliculas.view.list.ListMoviesFragment"
+        android:label="fragment_list_movies">
+        <action
+            android:id="@+id/action_listMoviesFragment_to_listDetailFragment"
+            app:destination="@id/listDetailFragment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            app:popEnterAnim="@android:anim/fade_in"
+            app:popExitAnim="@android:anim/fade_out" />
+    </fragment>
+    <fragment
+        android:id="@+id/listDetailFragment"
+        android:name="com.juni.desafiopeliculas.view.detail.ListDetailFragment"
+        android:label="fragment_detail">
+    <argument
+            android:name="movie"
+            app:argType="com.juni.desafiopeliculas.domain.model.MovieModel" />
+    </fragment>
+
+</navigation>
