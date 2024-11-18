@@ -19,10 +19,6 @@ class GetMovieListUseCase @Inject constructor(private val repository: GetMovieLi
         return repository.checkMovieList()
     }
 
-     suspend fun checkMovieList2(): DatabaseCheckResult {
-         return repository.checkMovieList()
-    }
-
     fun getListMoviePaging(): Flow<PagingData<MovieModel>> = Pager(
         PagingConfig(
             pageSize = 5,

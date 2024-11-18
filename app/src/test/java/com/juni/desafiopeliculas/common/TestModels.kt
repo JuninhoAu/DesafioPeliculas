@@ -19,36 +19,5 @@ fun movieModel() = MovieModel(
     overview = ""
 )
 
-fun movieListEntity() = listOf(movieEntity())
 fun movieListResponse() = MovieListResponse(listOf(movieResponse()))
-fun movieListEmptyResponse() = MovieListResponse(emptyList())
-fun movieListModel() = listOf(movieModel())
-
-
- val fakePagingSource = object : PagingSource<Int, MovieEntity>() {
-
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieEntity> {
-        return LoadResult.Page(
-            data = movieListEntity(),
-            prevKey = null,
-            nextKey = 1
-        )
-    }
-
-    override fun getRefreshKey(state: PagingState<Int, MovieEntity>): Int? {
-        return null
-    }
-}
-
-class FakePagingSource(private val data: List<MovieEntity>) : PagingSource<Int, MovieEntity>() {
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, MovieEntity> {
-        return LoadResult.Page(
-            data = data,
-            prevKey = null,
-            nextKey = null
-        )
-    }
-
-    override fun getRefreshKey(state: PagingState<Int, MovieEntity>): Int? = null
-}
 

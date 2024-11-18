@@ -82,8 +82,9 @@ dependencies {
 
     implementation("junit:junit:4.13.2")
     implementation("io.mockk:mockk:1.12.2")
-    testImplementation ("androidx.paging:paging-common:3.2.0") // Para pruebas de Paging
+    testImplementation ("androidx.paging:paging-common:3.2.0")
 
+    implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
 
     implementation(libs.androidx.appcompat)
     implementation(platform(libs.androidx.compose.bom))

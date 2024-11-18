@@ -2,7 +2,6 @@ package com.juni.desafiopeliculas.data.network
 
 import com.juni.desafiopeliculas.common.ResultType
 import com.juni.desafiopeliculas.common.movieListResponse
-import com.juni.desafiopeliculas.data.model.MovieResponse
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.impl.annotations.RelaxedMockK
