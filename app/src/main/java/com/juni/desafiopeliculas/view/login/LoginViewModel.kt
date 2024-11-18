@@ -40,6 +40,6 @@ class LoginViewModel() : ViewModel() {
     }
 
     private fun checkUser(email: String, passWord: String): Boolean {
-        return email == "Admin" && passWord == "1234567"
+        return email == "Admin" && passWord == "Password*123"
     }
 }
