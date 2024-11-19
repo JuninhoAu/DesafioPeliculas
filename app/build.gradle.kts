@@ -2,8 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.androidx.navigation.safeargs)
-    id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.dagger.hilt)
 }
 
 android {
@@ -66,28 +66,29 @@ dependencies {
     implementation(libs.converter.scalars)
     implementation(libs.converter.gson)
 
-    //
-    implementation("androidx.compose.material:material-icons-extended-android:1.7.5")
+    //material icons
+    implementation(libs.androidx.material.icons.extended.android)
 
     //room
-    implementation("androidx.room:room-runtime:2.6.1")
-    kapt("androidx.room:room-compiler:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1")
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.ktx)
 
     //dagger-hilt
-    implementation ("com.google.dagger:hilt-android:2.48")
-    kapt ("com.google.dagger:hilt-compiler:2.48")
+    implementation (libs.hilt.android)
+    ksp(libs.hilt.compiler)
 
     //paginacion
-    implementation("androidx.paging:paging-runtime:3.3.2")
-    implementation("androidx.paging:paging-compose:3.3.2")
-    implementation("androidx.room:room-paging:2.6.0")
+    implementation(libs.androidx.paging.runtime)
+    implementation(libs.paging.compose)
+    implementation(libs.androidx.room.paging)
 
-    implementation("junit:junit:4.13.2")
-    implementation("io.mockk:mockk:1.12.2")
-    testImplementation ("androidx.paging:paging-common:3.2.0")
+    implementation(libs.junit)
+    implementation(libs.mockk)
+    testImplementation (libs.androidx.paging.common)
 
-    implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
+    //glide for compose
+    implementation(libs.compose)
 
     implementation(libs.androidx.appcompat)
     implementation(platform(libs.androidx.compose.bom))
